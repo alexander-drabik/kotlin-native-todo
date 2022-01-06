@@ -1,0 +1,7 @@
+build/
+gradle/
+.gradle/
+.idea/
+*.hprof
+gradlew.bat
+debug.sh
