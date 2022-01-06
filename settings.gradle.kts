@@ -1,3 +1,2 @@
-
-rootProject.name = "todo3"
+rootProject.name = "todo"
 

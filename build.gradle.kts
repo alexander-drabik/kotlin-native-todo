@@ -5,10 +5,6 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -26,6 +22,7 @@ kotlin {
             }
         }
     }
+
     sourceSets {
         val nativeMain by getting
         val nativeTest by getting
