@@ -6,9 +6,9 @@ enum class State {
 
 fun stringToState(string: String): State {
     return when(string) {
-        "[ ]" -> State.TODO
-        "[-]" -> State.DOING
-        "[X]" -> State.DONE
+        "[ ]", " " -> State.TODO
+        "[-]", "-" -> State.DOING
+        "[X]", "X", "x" -> State.DONE
         else -> State.TODO
     }
 }

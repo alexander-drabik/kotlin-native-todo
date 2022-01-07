@@ -5,6 +5,7 @@ var headerObjects: Array<HeaderObject?> =  Array(0) { HeaderObject() }
 
 fun main() {
     //TODO: printing
+    loadFromFile()
 }
 
 fun createHeaderObject(headerObject: HeaderObject) {

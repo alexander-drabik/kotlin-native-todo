@@ -65,20 +65,19 @@ fun loadFromFile() {
                             // Create new header object
                             headerObject = HeaderObject()
 
-                            // Set header's title to value after # character
-                            for(i in 1 until input.length) {
-                                headerObject.headerTitle += input[i]
-                            }
+                            val regex = """^#\s*(.+)$""".toRegex()
+                            val title = regex.find(input.toString())?.groups?.get(1)!!.value
+
+                            headerObject.headerTitle = title
                         }
                         '[' -> {
                             // Create new todoObject
                             val todoObject = TODOObject()
 
                             // Get state
-                            var todoState = ""
-                            todoState += input[0]
-                            todoState += input[1]
-                            todoState += input[2]
+                            val regex = """^\[([ \-xX])\]\s*(.+)$""".toRegex()
+                            val todoState = regex.find(input.toString())?.groups?.get(1)!!.value
+
                             todoObject.state = stringToState(todoState)
 
                             // Set title
