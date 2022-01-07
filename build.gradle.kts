@@ -16,6 +16,13 @@ kotlin {
     }
 
     nativeTarget.apply {
+        compilations["main"].cinterops {
+            val ncurses by creating {
+                when(preset) {
+                    presets["linuxX64"] -> includeDirs.headerFilterOnly("/usr/include", "/usr/include/x86_64-linux-gnu")
+                }
+            }
+        }
         binaries {
             executable {
                 entryPoint = "main"
