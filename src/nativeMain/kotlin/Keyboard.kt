@@ -75,6 +75,47 @@ class KeyboardEvents {
                 newHeaderObject.headerTitle = editText("")
                 createHeaderObject(newHeaderObject)
             }
+            KEY_BACKSPACE, Keyboard.R.keycode -> {
+                var line = 0
+                loop@ for((x, headerObject) in headerObjects.withIndex()) {
+                    if(line == y) {
+                        val newList: Array<HeaderObject?> = Array(headerObjects.size-1) { HeaderObject() }
+                        var a = 0
+                        for(l in headerObjects.indices) {
+                            val newHeaderObject = headerObjects[l]
+                            if(l == x){
+                                saveToFile()
+                                continue
+                            }
+                            newList[a] = newHeaderObject
+                            a++
+                        }
+                        headerObjects = newList
+                    }
+
+                    line++
+                    if(headerObject!!.expanded) {
+                        for(i in 0 until headerObject.listOfTODOs.size) {
+                            if(line == y) {
+                                val newList: Array<TODOObject?> = Array(headerObject.listOfTODOs.size-1) { TODOObject() }
+                                var k =0
+                                for(j in 0 until headerObject.listOfTODOs.size) {
+                                    val newTodo = headerObject.listOfTODOs[j]
+                                    if(j == i) {
+                                        saveToFile()
+                                        continue
+                                    }
+                                    newList[k] = newTodo
+                                    k++
+                                }
+                                headerObject.listOfTODOs = newList
+                                break@loop
+                            }
+                            line++
+                        }
+                    }
+                }
+            }
         }
         when(keycode) {
             Keyboard.ENTER.keycode -> {
@@ -136,5 +177,5 @@ class KeyboardEvents {
 
 // Enum for keycodes that ncurses doesn't offer
 enum class Keyboard(val keycode: Int) {
-    E(101), TAB(9), ENTER(10), Q(113), INSERT(331)
+    E(101), TAB(9), ENTER(10), Q(113), INSERT(331), R(114)
 }
