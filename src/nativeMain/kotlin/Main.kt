@@ -1,16 +1,25 @@
 
-import ncurses.endwin
-import ncurses.initscr
-import ncurses.refresh
+import ncurses.*
 import objects.HeaderObject
 
 // Root array of header objects, can be accessed from everywhere via 'import headerObjects'
 var headerObjects: Array<HeaderObject?> =  Array(0) { HeaderObject() }
 
+var running: Boolean = true
+
 fun main() {
     initscr()
 
-    refresh()
+    while(running) {
+        clear()
+
+        refresh()
+
+        val input = getch()
+        if(input == Keyboard.ESCAPE.keycode) {
+          close()
+        }
+    }
 
     endwin()
 }
@@ -20,4 +29,8 @@ fun createHeaderObject(headerObject: HeaderObject) {
     newHeaderObjects[headerObjects.size] = headerObject
 
     headerObjects = newHeaderObjects
+}
+
+fun close() {
+    running = false
 }
