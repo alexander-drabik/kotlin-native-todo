@@ -20,7 +20,7 @@ fun main() {
     noecho()
 
     while(running) {
-        clear()
+        erase()
 
         for(headerObject in headerObjects) {
             headerObject?.draw()
@@ -29,7 +29,6 @@ fun main() {
         move(y, x)
 
         refresh()
-
         keyboard.typeEvent(getch())
     }
 
