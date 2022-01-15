@@ -3,6 +3,7 @@ import ncurses.KEY_DOWN
 import ncurses.KEY_LEFT
 import ncurses.KEY_RIGHT
 import ncurses.KEY_UP
+import objects.State
 import kotlin.math.max
 
 class KeyboardEvents {
@@ -11,7 +12,7 @@ class KeyboardEvents {
             Keyboard.E.keycode -> {
                 close()
             }
-            Keyboard.TAB.keycode -> {
+            Keyboard.TAB.keycode, Keyboard.ENTER.keycode -> {
                 var line = 0
                 for(headerObject in headerObjects) {
                     if(line == y) {
@@ -32,10 +33,37 @@ class KeyboardEvents {
             KEY_LEFT -> x = max(x-1, 0)
             KEY_RIGHT-> x++
         }
+        when(keycode) {
+            Keyboard.ENTER.keycode -> {
+                var line = 0
+                var end = false
+                for(headerObject in headerObjects) {
+                    line++
+                    if(headerObject!!.expanded) {
+                        for(todo in headerObject.listOfTODOs) {
+                            if(line == y) {
+                                when(todo?.state) {
+                                    State.TODO  -> todo.state = State.DOING
+                                    State.DOING -> todo.state = State.DONE
+                                    State.DONE  -> todo.state = State.TODO
+                                }
+                                saveToFile()
+
+                                end = true
+                                break
+                            }
+                            line++
+                        }
+                    }
+                    if(end)
+                        break
+                }
+            }
+        }
     }
 }
 
 // Enum for keycodes that ncurses doesn't offer
 enum class Keyboard(val keycode: Int) {
-    E(101), TAB(9)
+    E(101), TAB(9), ENTER(10)
 }
