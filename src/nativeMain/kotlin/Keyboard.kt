@@ -1,6 +1,8 @@
 
 import ncurses.*
+import objects.HeaderObject
 import objects.State
+import objects.TODOObject
 import kotlin.math.max
 
 class KeyboardEvents {
@@ -46,12 +48,38 @@ class KeyboardEvents {
                     }
                 }
             }
+
+            Keyboard.INSERT.keycode -> {
+                var line = 0
+                for(headerObject in headerObjects) {
+                    if(line == y) {
+                        val newTodo = TODOObject()
+                        newTodo.text = editText("")
+                        newTodo.state = State.TODO
+                        headerObject?.addTODO(newTodo)
+                    }
+                    line++
+                    if(headerObject!!.expanded) {
+                        for(todo in headerObject.listOfTODOs) {
+                            if(line == y) {
+                                val newTodo = TODOObject()
+                                newTodo.text = editText("")
+                                newTodo.state = State.TODO
+                                headerObject.addTODO(newTodo)
+                            }
+                            line++
+                        }
+                    }
+                }
+                val newHeaderObject = HeaderObject()
+                newHeaderObject.headerTitle = editText("")
+                createHeaderObject(newHeaderObject)
+            }
         }
         when(keycode) {
             Keyboard.ENTER.keycode -> {
                 var line = 0
-                var end = false
-                for(headerObject in headerObjects) {
+                loop@ for(headerObject in headerObjects) {
                     line++
                     if(headerObject!!.expanded) {
                         for(todo in headerObject.listOfTODOs) {
@@ -63,14 +91,11 @@ class KeyboardEvents {
                                 }
                                 saveToFile()
 
-                                end = true
-                                break
+                                break@loop
                             }
                             line++
                         }
                     }
-                    if(end)
-                        break
                 }
             }
         }
@@ -96,7 +121,9 @@ class KeyboardEvents {
             refresh()
             val input = getch()
             if(input == Keyboard.ENTER.keycode || input == Keyboard.TAB.keycode) {
-                return output
+                if(output.isNotEmpty()) {
+                    return output
+                }
             }
             if(input == KEY_BACKSPACE) {
                 output = output.dropLast(1)
@@ -109,5 +136,5 @@ class KeyboardEvents {
 
 // Enum for keycodes that ncurses doesn't offer
 enum class Keyboard(val keycode: Int) {
-    E(101), TAB(9), ENTER(10), Q(113), BACKSPACE(127)
+    E(101), TAB(9), ENTER(10), Q(113), INSERT(331)
 }

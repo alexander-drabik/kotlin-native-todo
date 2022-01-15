@@ -73,15 +73,13 @@ fun loadFromFile() {
                             val todoObject = TODOObject()
 
                             // Get state
-                            val regex = """^\[([ \-xX])]\s*(.+)$""".toRegex()
+                            val regex = """^\[([ \-xX])]\s*(.+?)$""".toRegex()
                             val todoState = regex.find(input.toString())?.groups?.get(1)!!.value
 
                             todoObject.state = stringToState(todoState)
 
                             // Set title
-                            for(i in 3 until input.length) {
-                                todoObject.text += input[i]
-                            }
+                            todoObject.text = regex.find(input.toString())?.groups?.get(2)!!.value 
 
                             headerObject!!.addTODO(todoObject)
                         }
