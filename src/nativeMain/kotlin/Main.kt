@@ -7,13 +7,26 @@ var headerObjects: Array<HeaderObject?> =  Array(0) { HeaderObject() }
 
 var running: Boolean = true
 
-fun main() {
-    initscr()
+var x: Int = 0
+var y: Int = 0
 
+fun main() {
+    loadFromFile()
     val keyboard = KeyboardEvents()
+
+    initscr()
+    raw()
+    keypad(stdscr, true)
+    noecho()
 
     while(running) {
         clear()
+
+        for(headerObject in headerObjects) {
+            headerObject?.draw()
+        }
+
+        move(y, x)
 
         refresh()
 

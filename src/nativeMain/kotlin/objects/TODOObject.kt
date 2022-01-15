@@ -1,5 +1,7 @@
 package objects
 
+import ncurses.printw
+
 class TODOObject {
     var text = ""
     var state: State = State.TODO
@@ -9,5 +11,9 @@ class TODOObject {
             State.DOING -> "[-]"
             State.DONE  -> "[X]"
         }
+    }
+
+    fun draw() {
+        printw(stateToString() + text)
     }
 }

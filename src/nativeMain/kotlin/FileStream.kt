@@ -1,16 +1,14 @@
 
 import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.toKString
 import objects.HeaderObject
 import objects.TODOObject
 import objects.stringToState
-import platform.posix.fclose
-import platform.posix.fgetc
-import platform.posix.fopen
-import platform.posix.fputs
+import platform.posix.*
 
 fun saveToFile() {
     // Open save file in write mode
-    val file = fopen("~/.config/todo/save", "w")
+    val file = fopen("${getenv("HOME")?.toKString()}/.config/todo/save", "w")
 
     // Construct output string
     val output = StringBuilder()
@@ -36,7 +34,7 @@ fun saveToFile() {
 
 fun loadFromFile() {
     // Open save file in read mode
-    val file = fopen("~/.config/todo/save", "r")
+    val file = fopen("${getenv("HOME")?.toKString()}/.config/todo/save", "r")
 
     var input = StringBuilder()
 
@@ -75,7 +73,7 @@ fun loadFromFile() {
                             val todoObject = TODOObject()
 
                             // Get state
-                            val regex = """^\[([ \-xX])\]\s*(.+)$""".toRegex()
+                            val regex = """^\[([ \-xX])]\s*(.+)$""".toRegex()
                             val todoState = regex.find(input.toString())?.groups?.get(1)!!.value
 
                             todoObject.state = stringToState(todoState)
