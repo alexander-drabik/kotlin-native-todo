@@ -10,7 +10,7 @@ import platform.posix.fputs
 
 fun saveToFile() {
     // Open save file in write mode
-    val file = fopen("/home/alex/.todo/todo", "w")
+    val file = fopen("~/.config/todo/save", "w")
 
     // Construct output string
     val output = StringBuilder()
@@ -36,7 +36,7 @@ fun saveToFile() {
 
 fun loadFromFile() {
     // Open save file in read mode
-    val file = fopen("/home/alex/.todo/todo", "r")
+    val file = fopen("~/.config/todo/save", "r")
 
     var input = StringBuilder()
 

@@ -10,15 +10,14 @@ var running: Boolean = true
 fun main() {
     initscr()
 
+    val keyboard = KeyboardEvents()
+
     while(running) {
         clear()
 
         refresh()
 
-        val input = getch()
-        if(input == Keyboard.ESCAPE.keycode) {
-          close()
-        }
+        keyboard.typeEvent(getch())
     }
 
     endwin()
