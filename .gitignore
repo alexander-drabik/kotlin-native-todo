@@ -6,3 +6,4 @@ gradle/
 gradlew.bat
 debug.sh
 src/nativeInterop
+check.kexe
