@@ -30,7 +30,7 @@ class KeyboardEvents {
                 var line = 0
                 loop@ for(headerObject in headerObjects) {
                     if(line == y){
-                        headerObject!!.headerTitle = editText(headerObject.headerTitle)
+                        headerObject!!.headerTitle = editText(headerObject.headerTitle, "Editing '${headerObject.headerTitle}': ")
                         saveToFile()
                         break
                     }
@@ -39,7 +39,7 @@ class KeyboardEvents {
                     if(headerObject!!.expanded) {
                         for(todo in headerObject.listOfTODOs) {
                             if(line == y) {
-                                todo!!.text = editText(todo.text)
+                                todo!!.text = editText(todo.text, "Editing '${todo.text}': ")
                                 saveToFile()
                                 break@loop
                             }
@@ -51,39 +51,41 @@ class KeyboardEvents {
 
             Keyboard.INSERT.keycode -> {
                 var line = 0
-                for(headerObject in headerObjects) {
+                loop@ for(headerObject in headerObjects) {
                     if(line == y) {
                         val newTodo = TODOObject()
-                        newTodo.text = editText("")
+                        newTodo.text = editText("", "Creating new todo checkbox: ")
                         newTodo.state = State.TODO
                         headerObject?.addTODO(newTodo)
+                        return
                     }
                     line++
                     if(headerObject!!.expanded) {
                         for(todo in headerObject.listOfTODOs) {
                             if(line == y) {
                                 val newTodo = TODOObject()
-                                newTodo.text = editText("")
+                                newTodo.text = editText("", "Creating new todo checkbox: ")
                                 newTodo.state = State.TODO
                                 headerObject.addTODO(newTodo)
+                                return
                             }
                             line++
                         }
                     }
                 }
                 val newHeaderObject = HeaderObject()
-                newHeaderObject.headerTitle = editText("")
+                newHeaderObject.headerTitle = editText("", "Creating new todo checkbox: ")
                 createHeaderObject(newHeaderObject)
             }
             KEY_BACKSPACE, Keyboard.R.keycode -> {
                 var line = 0
                 loop@ for((x, headerObject) in headerObjects.withIndex()) {
-                    if(line == y) {
+                    if(line == y && verificationAsk("Are you sure you want to delete `${headerObject?.headerTitle}`? y/n")) {
                         val newList: Array<HeaderObject?> = Array(headerObjects.size-1) { HeaderObject() }
                         var a = 0
                         for(l in headerObjects.indices) {
                             val newHeaderObject = headerObjects[l]
-                            if(l == x){
+                            if(l == x) {
                                 saveToFile()
                                 continue
                             }
@@ -96,7 +98,7 @@ class KeyboardEvents {
                     line++
                     if(headerObject!!.expanded) {
                         for(i in 0 until headerObject.listOfTODOs.size) {
-                            if(line == y) {
+                            if(line == y && verificationAsk("Are you sure you want to delete `${headerObject.listOfTODOs[i]?.text}`? y/n")) {
                                 val newList: Array<TODOObject?> = Array(headerObject.listOfTODOs.size-1) { TODOObject() }
                                 var k =0
                                 for(j in 0 until headerObject.listOfTODOs.size) {
@@ -149,7 +151,7 @@ class KeyboardEvents {
         }
     }
 
-    private fun editText(text: String): String {
+    private fun editText(text: String, message: String): String {
         var output = text
         while (true) {
             initscr()
@@ -157,6 +159,8 @@ class KeyboardEvents {
             erase()
             move(0, 0)
 
+            printw(message)
+            printw("\n")
             printw(output)
 
             refresh()
@@ -165,6 +169,7 @@ class KeyboardEvents {
                 if(output.isNotEmpty()) {
                     return output
                 }
+                continue
             }
             if(input == KEY_BACKSPACE) {
                 output = output.dropLast(1)

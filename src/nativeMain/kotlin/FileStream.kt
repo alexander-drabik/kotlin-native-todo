@@ -98,3 +98,37 @@ fun loadFromFile() {
             createHeaderObject(headerObject)
     }
 }
+
+fun loadConfig() {
+    // Open config file in read mode
+    val file = fopen("${getenv("HOME")?.toKString()}/.config/todo/config", "r")
+
+    var input = StringBuilder()
+
+    // Manual controlling of memory
+    memScoped {
+        do {
+            val c = fgetc(file)
+
+            if(c == 10) {
+                // Remove whitespaces from the beginning and end
+                val line = StringBuilder()
+                line.append(input.trim().toString())
+                input = line
+
+                val commandRegex = """(.*)\s(.*)""".toRegex()
+                val value = commandRegex.find(input.toString())?.groups?.get(2)!!.value
+
+                when(commandRegex.find(input.toString())?.groups?.get(1)!!.value) {
+                    "spaces" -> spaces = value.toInt()
+                    "indent_spaces" -> indentSpaces = value.toInt()
+                }
+
+                input = StringBuilder()
+            } else {
+                input.append(c.toChar())
+            }
+
+        } while (c >= 0)
+    }
+}

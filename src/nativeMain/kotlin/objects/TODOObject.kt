@@ -1,6 +1,8 @@
 package objects
 
+import indentSpaces
 import ncurses.printw
+import spaces
 
 class TODOObject {
     var text = ""
@@ -14,6 +16,13 @@ class TODOObject {
     }
 
     fun draw() {
-        printw(stateToString() + text)
+        for(i in 0 until indentSpaces) {
+            printw(" ")
+        }
+        printw(stateToString())
+        for(i in 0 until spaces) {
+            printw(" ")
+        }
+        printw(text)
     }
 }

@@ -11,6 +11,7 @@ var x: Int = 0
 var y: Int = 0
 
 fun main() {
+    loadConfig()
     loadFromFile()
     val keyboard = KeyboardEvents()
 
@@ -44,4 +45,20 @@ fun createHeaderObject(headerObject: HeaderObject) {
 
 fun close() {
     running = false
+}
+
+fun verificationAsk(text: String): Boolean {
+    while(true) {
+        erase()
+
+        printw(text)
+
+        refresh()
+
+        val input = getch()
+        when(input.toChar()) {
+            'y' -> return true
+            'n' -> return false
+        }
+    }
 }
