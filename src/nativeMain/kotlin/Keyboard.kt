@@ -168,7 +168,7 @@ class KeyboardEvents {
 
             refresh()
             val input = getch()
-            if(input == use) {
+            if(input == Keyboard.ENTER.keycode) {
                 if(output.isNotEmpty()) {
                     return output
                 }
