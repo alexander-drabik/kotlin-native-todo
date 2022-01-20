@@ -8,11 +8,11 @@ import kotlin.math.max
 class KeyboardEvents {
     fun typeEvent(keycode: Int) {
         when(keycode) {
-            Keyboard.Q.keycode -> {
+            exit -> {
                 close()
                 saveToFile()
             }
-            Keyboard.TAB.keycode, Keyboard.ENTER.keycode -> {
+            use -> {
                 var line = 0
                 loop@ for(headerObject in headerObjects) {
                     if(line == y) {
@@ -27,7 +27,7 @@ class KeyboardEvents {
                     }
                 }
             }
-            Keyboard.E.keycode -> {
+            edit -> {
                 var line = 0
                 loop@ for(headerObject in headerObjects) {
                     if(line == y){
@@ -50,7 +50,7 @@ class KeyboardEvents {
                 }
             }
 
-            Keyboard.INSERT.keycode -> {
+            new -> {
                 var line = 0
                 loop@ for(headerObject in headerObjects) {
                     if(line == y) {
@@ -80,7 +80,7 @@ class KeyboardEvents {
                 newHeaderObject.headerTitle = editText("", "Creating new todo checkbox: ")
                 createHeaderObject(newHeaderObject)
             }
-            KEY_BACKSPACE, Keyboard.R.keycode -> {
+            remove -> {
                 var line = 0
                 loop@ for((x, headerObject) in headerObjects.withIndex()) {
                     if(line == y && verificationAsk("Are you sure you want to delete `${headerObject?.headerTitle}`? y/n")) {
@@ -123,7 +123,7 @@ class KeyboardEvents {
             }
         }
         when(keycode) {
-            Keyboard.ENTER.keycode -> {
+            use -> {
                 var line = 0
                 loop@ for(headerObject in headerObjects) {
                     line++
@@ -147,10 +147,10 @@ class KeyboardEvents {
         }
 
         when(keycode) {
-            KEY_UP   -> y = max(y-1, 0)
-            KEY_DOWN -> y++
-            KEY_LEFT -> x = max(x-1, 0)
-            KEY_RIGHT -> x++
+            up   -> y = max(y-1, 0)
+            down -> y++
+            left -> x = max(x-1, 0)
+            right-> x++
         }
     }
 
@@ -168,7 +168,7 @@ class KeyboardEvents {
 
             refresh()
             val input = getch()
-            if(input == Keyboard.ENTER.keycode || input == Keyboard.TAB.keycode) {
+            if(input == use) {
                 if(output.isNotEmpty()) {
                     return output
                 }

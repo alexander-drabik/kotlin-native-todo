@@ -117,11 +117,18 @@ fun loadConfig() {
                 input = line
 
                 val commandRegex = """(.*)\s(.*)""".toRegex()
-                val value = commandRegex.find(input.toString())?.groups?.get(2)!!.value
+                val value = commandRegex.find(input.toString())?.groups?.get(2)?.value
 
-                when(commandRegex.find(input.toString())?.groups?.get(1)!!.value) {
-                    "spaces" -> spaces = value.toInt()
-                    "indent_spaces" -> indentSpaces = value.toInt()
+                when(commandRegex.find(input.toString())?.groups?.get(1)?.value) {
+                    "spaces" -> spaces = value?.toInt()!!
+                    "indent_spaces" -> indentSpaces = value?.toInt()!!
+
+                    "up"   -> up    = toKey(value)
+                    "down" -> down  = toKey(value)
+                    "left" -> left  = toKey(value)
+                    "right"-> right = toKey(value)
+                    "use"  -> use   = toKey(value)
+                    "new"  -> new   = toKey(value)
                 }
 
                 input = StringBuilder()
