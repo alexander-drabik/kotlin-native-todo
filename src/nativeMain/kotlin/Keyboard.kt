@@ -10,6 +10,7 @@ class KeyboardEvents {
         when(keycode) {
             Keyboard.Q.keycode -> {
                 close()
+                saveToFile()
             }
             Keyboard.TAB.keycode, Keyboard.ENTER.keycode -> {
                 var line = 0
@@ -57,6 +58,7 @@ class KeyboardEvents {
                         newTodo.text = editText("", "Creating new todo checkbox: ")
                         newTodo.state = State.TODO
                         headerObject?.addTODO(newTodo)
+                        saveToFile()
                         return
                     }
                     line++
@@ -67,6 +69,7 @@ class KeyboardEvents {
                                 newTodo.text = editText("", "Creating new todo checkbox: ")
                                 newTodo.state = State.TODO
                                 headerObject.addTODO(newTodo)
+                                saveToFile()
                                 return
                             }
                             line++
@@ -174,7 +177,9 @@ class KeyboardEvents {
             if(input == KEY_BACKSPACE) {
                 output = output.dropLast(1)
             } else {
-                output += input.toChar()
+                if(input in 40..122) {
+                    output += input.toChar()
+                }
             }
         }
     }
