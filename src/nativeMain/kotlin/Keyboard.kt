@@ -177,7 +177,7 @@ class KeyboardEvents {
             if(input == KEY_BACKSPACE) {
                 output = output.dropLast(1)
             } else {
-                if(input in 40..122) {
+                if(input in 32..122) {
                     output += input.toChar()
                 }
             }
