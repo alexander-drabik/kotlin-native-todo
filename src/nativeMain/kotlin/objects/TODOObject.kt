@@ -15,6 +15,14 @@ class TODOObject {
         }
     }
 
+    fun next() {
+        state = when (state) {
+            State.TODO -> State.DOING
+            State.DOING-> State.DONE
+            State.DONE -> State.TODO
+        }
+    }
+
     fun draw() {
         for(i in 0 until indentSpaces) {
             printw(" ")

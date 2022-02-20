@@ -1,6 +1,6 @@
-
 import ncurses.*
 import objects.HeaderObject
+import objects.ObjectType
 import objects.State
 import objects.TODOObject
 import kotlin.math.max
@@ -13,33 +13,31 @@ class KeyboardEvents {
                 saveToFile()
             }
             use -> {
-                var line = 0
-                loop@ for(headerObject in headerObjects) {
-                    if(line == y) {
-                        headerObject?.expanded = !headerObject?.expanded!!
-                        break
+                when (getLineType(y)) {
+                    ObjectType.Header -> {
+                        val id = getHeaderID(y)
+                        headerObjects[id!!]?.expanded = !headerObjects[id]!!.expanded
                     }
-                    line++
-                    if(headerObject!!.expanded) {
-                        for(todo in headerObject.listOfTODOs) {
-                            line++
-                        }
+                    ObjectType.Todo -> {
+                        val id = getTodoID(y)
+                        headerObjects[id!![1]]!!.listOfTODOs[id[0]]!!.next()
                     }
+                    else -> {} // Compiler is angry at me when I don't do that, just ignore that
                 }
             }
             edit -> {
                 var line = 0
-                loop@ for(headerObject in headerObjects) {
-                    if(line == y){
+                loop@ for (headerObject in headerObjects) {
+                    if (line == y){
                         headerObject!!.headerTitle = editText(headerObject.headerTitle, "Editing '${headerObject.headerTitle}': ")
                         saveToFile()
                         break
                     }
 
                     line++
-                    if(headerObject!!.expanded) {
-                        for(todo in headerObject.listOfTODOs) {
-                            if(line == y) {
+                    if (headerObject!!.expanded) {
+                        for (todo in headerObject.listOfTODOs) {
+                            if (line == y) {
                                 todo!!.text = editText(todo.text, "Editing '${todo.text}': ")
                                 saveToFile()
                                 break@loop
@@ -52,8 +50,8 @@ class KeyboardEvents {
 
             new -> {
                 var line = 0
-                loop@ for(headerObject in headerObjects) {
-                    if(line == y) {
+                loop@ for (headerObject in headerObjects) {
+                    if (line == y) {
                         val newTodo = TODOObject()
                         newTodo.text = editText("", "Creating new todo checkbox: ")
                         newTodo.state = State.TODO
@@ -62,9 +60,9 @@ class KeyboardEvents {
                         return
                     }
                     line++
-                    if(headerObject!!.expanded) {
-                        for(todo in headerObject.listOfTODOs) {
-                            if(line == y) {
+                    if (headerObject!!.expanded) {
+                        for (todo in headerObject.listOfTODOs) {
+                            if (line == y) {
                                 val newTodo = TODOObject()
                                 newTodo.text = editText("", "Creating new todo checkbox: ")
                                 newTodo.state = State.TODO
@@ -82,13 +80,13 @@ class KeyboardEvents {
             }
             remove -> {
                 var line = 0
-                loop@ for((x, headerObject) in headerObjects.withIndex()) {
+                loop@ for ((x, headerObject) in headerObjects.withIndex()) {
                     if(line == y && verificationAsk("Are you sure you want to delete `${headerObject?.headerTitle}`? y/n")) {
                         val newList: Array<HeaderObject?> = Array(headerObjects.size-1) { HeaderObject() }
                         var a = 0
-                        for(l in headerObjects.indices) {
+                        for (l in headerObjects.indices) {
                             val newHeaderObject = headerObjects[l]
-                            if(l == x) {
+                            if (l == x) {
                                 saveToFile()
                                 continue
                             }
@@ -99,12 +97,12 @@ class KeyboardEvents {
                     }
 
                     line++
-                    if(headerObject!!.expanded) {
-                        for(i in 0 until headerObject.listOfTODOs.size) {
-                            if(line == y && verificationAsk("Are you sure you want to delete `${headerObject.listOfTODOs[i]?.text}`? y/n")) {
+                    if (headerObject!!.expanded) {
+                        for (i in 0 until headerObject.listOfTODOs.size) {
+                            if (line == y && verificationAsk("Are you sure you want to delete `${headerObject.listOfTODOs[i]?.text}`? y/n")) {
                                 val newList: Array<TODOObject?> = Array(headerObject.listOfTODOs.size-1) { TODOObject() }
                                 var k =0
-                                for(j in 0 until headerObject.listOfTODOs.size) {
+                                for (j in 0 until headerObject.listOfTODOs.size) {
                                     val newTodo = headerObject.listOfTODOs[j]
                                     if(j == i) {
                                         saveToFile()
@@ -114,29 +112,6 @@ class KeyboardEvents {
                                     k++
                                 }
                                 headerObject.listOfTODOs = newList
-                                break@loop
-                            }
-                            line++
-                        }
-                    }
-                }
-            }
-        }
-        when(keycode) {
-            use -> {
-                var line = 0
-                loop@ for(headerObject in headerObjects) {
-                    line++
-                    if(headerObject!!.expanded) {
-                        for(todo in headerObject.listOfTODOs) {
-                            if(line == y) {
-                                when(todo?.state) {
-                                    State.TODO  -> todo.state = State.DOING
-                                    State.DOING -> todo.state = State.DONE
-                                    State.DONE  -> todo.state = State.TODO
-                                }
-                                saveToFile()
-
                                 break@loop
                             }
                             line++
@@ -187,5 +162,5 @@ class KeyboardEvents {
 
 // Enum for keycodes that ncurses doesn't offer
 enum class Keyboard(val keycode: Int) {
-    E(101), TAB(9), ENTER(10), Q(113), INSERT(331), R(114)
+    E(101), TAB(9), ENTER(10), Q(113), INSERT(331)
 }
