@@ -17,7 +17,7 @@ class HeaderObject {
 
     fun draw() {
         printw(headerTitle)
-        if(expanded) {
+        if (expanded) {
             printw("\n")
             for(todo in listOfTODOs) {
                 todo?.draw()

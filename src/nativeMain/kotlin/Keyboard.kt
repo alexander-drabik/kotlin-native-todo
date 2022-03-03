@@ -103,7 +103,7 @@ class KeyboardEvents {
             }
         }
 
-        when(keycode) {
+        when (keycode) {
             up   -> y = max(y-1, 0)
             down -> y++
             left -> x = max(x-1, 0)
@@ -125,13 +125,13 @@ class KeyboardEvents {
 
             refresh()
             val input = getch()
-            if(input == Keyboard.ENTER.keycode) {
+            if (input == Keyboard.ENTER.keycode) {
                 if(output.isNotEmpty()) {
                     return output
                 }
                 continue
             }
-            if(input == KEY_BACKSPACE) {
+            if (input == KEY_BACKSPACE) {
                 output = output.dropLast(1)
             } else {
                 if(input in 32..122) {

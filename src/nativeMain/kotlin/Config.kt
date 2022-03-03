@@ -14,7 +14,7 @@ var exit: Int = Keyboard.Q.keycode
 var pointer = false
 
 fun toKey(value: String?): Int {
-    when(value) {
+    when (value) {
         "TAB" -> return Keyboard.TAB.keycode
         "ENTER" -> return Keyboard.ENTER.keycode
         "BACKSPACE" -> return KEY_BACKSPACE

@@ -11,12 +11,12 @@ fun saveToFile() {
 
     // Construct output string
     val output = StringBuilder()
-    for(header in headerObjects) {
+    for (header in headerObjects) {
         // Write header title in format: #title
         output.append('#' + header.headerTitle + '\n')
 
         // Write TODOs in format: [stateStatus]title
-        for(todo in header.listOfTODOs) {
+        for (todo in header.listOfTODOs) {
             output.append(9.toChar() + todo!!.stateToString() + todo.text + '\n')
         }
 
@@ -45,18 +45,18 @@ fun loadFromFile() {
             val c = fgetc(file)
 
             // New line operations
-            if(c == 10) {
+            if (c == 10) {
                 // Remove whitespaces from the beginning and end
                 val line = StringBuilder()
                 line.append(input.trim().toString())
                 input = line
 
-                if(input.isNotEmpty()) {
-                    when(input[0]) {
+                if (input.isNotEmpty()) {
+                    when (input[0]) {
                         // Line is header object's title
                         '#' -> {
                             // Add current header object to array if exists
-                            if(headerObject != null)
+                            if (headerObject != null)
                                 createHeaderObject(headerObject)
 
                             // Create new header object
@@ -109,7 +109,7 @@ fun loadConfig() {
         do {
             val c = fgetc(file)
 
-            if(c == 10) {
+            if (c == 10) {
                 // Remove whitespaces from the beginning and end
                 val line = StringBuilder()
                 line.append(input.trim().toString())
@@ -118,7 +118,7 @@ fun loadConfig() {
                 val commandRegex = """(.*)\s(.*)""".toRegex()
                 val value = commandRegex.find(input.toString())?.groups?.get(2)?.value
 
-                when(commandRegex.find(input.toString())?.groups?.get(1)?.value) {
+                when (commandRegex.find(input.toString())?.groups?.get(1)?.value) {
                     "spaces" -> spaces = value?.toInt()!!
                     "indent_spaces" -> indentSpaces = value?.toInt()!!
                     "pointer" -> pointer = value.toBoolean()
