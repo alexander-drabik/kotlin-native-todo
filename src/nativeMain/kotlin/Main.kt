@@ -12,6 +12,7 @@ var y: Int = 0
 var drawLines: Int = 0
 
 var screenY: Int = 0
+var scroll: Int = 0
 
 fun main() {
     loadConfig()
@@ -28,10 +29,15 @@ fun main() {
         erase()
 
         screenY = getmaxy(stdscr)
+        if (y >= screenY + scroll) {
+            scroll++
+        } else if (y < scroll) {
+            scroll--
+        }
 
         draw(pointerInfo)
 
-        move(y, x)
+        move(y - scroll, x)
 
         refresh()
         keyboard.typeEvent(getch())
