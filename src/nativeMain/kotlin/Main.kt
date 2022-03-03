@@ -9,6 +9,9 @@ var running: Boolean = true
 
 var x: Int = 0
 var y: Int = 0
+var drawLines: Int = 0
+
+var screenY: Int = 0
 
 fun main() {
     loadConfig()
@@ -24,12 +27,9 @@ fun main() {
     while (running) {
         erase()
 
-        for (headerObject in headerObjects) {
-            headerObject.draw()
-        }
-        if (pointer) {
-            pointerInfo.draw(y)
-        }
+        screenY = getmaxy(stdscr)
+
+        draw(pointerInfo)
 
         move(y, x)
 
@@ -38,6 +38,14 @@ fun main() {
     }
 
     endwin()
+}
+
+fun draw(pointerInfo: PointerInfo) {
+    drawLines = 0
+    for (headerObject in headerObjects)
+        headerObject.draw()
+    if (pointer)
+        pointerInfo.draw(y)
 }
 
 fun createHeaderObject(headerObject: HeaderObject) {

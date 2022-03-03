@@ -1,6 +1,8 @@
 package objects
 
+import drawLines
 import ncurses.printw
+import screenY
 
 /* Object used for creating headers for checkboxes (TODOs). */
 class HeaderObject {
@@ -16,18 +18,24 @@ class HeaderObject {
     }
 
     fun draw() {
+        if (drawLines >= screenY-1) return
         printw(headerTitle)
-        if (expanded) {
+        if(expanded) {
             printw("\n")
+            drawLines++
             for(todo in listOfTODOs) {
+                if (drawLines >= screenY-1) return
                 todo?.draw()
                 printw("\n")
+                drawLines++
             }
         } else {
+            if (drawLines >= screenY-1) return
             if(listOfTODOs.isNotEmpty()) {
                 printw(" [...]")
             }
             printw("\n")
+            drawLines++
         }
     }
 }
