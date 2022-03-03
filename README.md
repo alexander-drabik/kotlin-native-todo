@@ -39,6 +39,7 @@ As value of any key bind you can write any character from a-z or A-Z, additional
 ### Formatting
 * indent_spaces - indentation of checkbox
 * spaces - number of spaces between state of checkbox and name of checkpoint
+* pointer - visibility of pointer info at the bottom
 
 ## Save file
 Application automatically saves everything to "~/.config/todo/save". It was designed to be easily readable for humans, so you can edit it manually if you want. Example save file:
