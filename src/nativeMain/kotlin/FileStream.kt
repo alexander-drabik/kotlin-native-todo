@@ -121,6 +121,7 @@ fun loadConfig() {
                 when(commandRegex.find(input.toString())?.groups?.get(1)?.value) {
                     "spaces" -> spaces = value?.toInt()!!
                     "indent_spaces" -> indentSpaces = value?.toInt()!!
+                    "pointer" -> pointer = value.toBoolean()
 
                     "up"   -> up    = toKey(value)
                     "down" -> down  = toKey(value)

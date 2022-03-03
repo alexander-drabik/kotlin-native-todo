@@ -1,5 +1,6 @@
 import ncurses.*
 import objects.HeaderObject
+import objects.PointerInfo
 
 // Root array of header objects, can be accessed from everywhere via 'import headerObjects'
 var headerObjects: Array<HeaderObject> =  Array(0) { HeaderObject() }
@@ -19,11 +20,15 @@ fun main() {
     keypad(stdscr, true)
     noecho()
 
-    while(running) {
+    val pointerInfo = PointerInfo()
+    while (running) {
         erase()
 
-        for(headerObject in headerObjects) {
+        for (headerObject in headerObjects) {
             headerObject.draw()
+        }
+        if (pointer) {
+            pointerInfo.draw(y)
         }
 
         move(y, x)
