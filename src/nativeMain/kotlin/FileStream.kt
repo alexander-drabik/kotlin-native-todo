@@ -1,4 +1,3 @@
-
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.toKString
 import objects.HeaderObject
@@ -14,7 +13,7 @@ fun saveToFile() {
     val output = StringBuilder()
     for(header in headerObjects) {
         // Write header title in format: #title
-        output.append('#' + header!!.headerTitle + '\n')
+        output.append('#' + header.headerTitle + '\n')
 
         // Write TODOs in format: [stateStatus]title
         for(todo in header.listOfTODOs) {

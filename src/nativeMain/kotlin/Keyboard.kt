@@ -8,115 +8,97 @@ import kotlin.math.max
 class KeyboardEvents {
     fun typeEvent(keycode: Int) {
         when(keycode) {
-            exit -> {
+            exit -> { // Exit the application
                 close()
                 saveToFile()
             }
-            use -> {
-                when (getLineType(y)) {
+            use -> { // Interact with selected line
+                when (getLineTypeAt(y)) {
+                    ObjectType.Header -> { // Expand Headers
+                        val id = getHeaderIdAt(y)
+                        headerObjects[id].expanded = !headerObjects[id].expanded
+                        saveToFile()
+                    }
+                    ObjectType.Todo -> { // Change state od TodoObjects
+                        val todoID = getTodoIdAt(y)[0]
+                        val headerID = getTodoIdAt(y)[1]
+                        headerObjects[headerID].listOfTODOs[todoID]?.next()
+                        saveToFile()
+                    }
+                    else -> {} // Compiler is angry at me when I don't do that, just ignore this line
+                }
+            }
+            edit -> { // Edit text at selected line
+                when (getLineTypeAt(y)) {
                     ObjectType.Header -> {
-                        val id = getHeaderID(y)
-                        headerObjects[id!!]?.expanded = !headerObjects[id]!!.expanded
+                        val id = getHeaderIdAt(y)
+                        headerObjects[id].headerTitle = editText(headerObjects[id].headerTitle, "Editing '${headerObjects[id].headerTitle}'")
                     }
                     ObjectType.Todo -> {
-                        val id = getTodoID(y)
-                        headerObjects[id!![1]]!!.listOfTODOs[id[0]]!!.next()
+                        val todoID = getTodoIdAt(y)[0]
+                        val headerID = getTodoIdAt(y)[1]
+                        val text = headerObjects[headerID].listOfTODOs[todoID]!!.text
+                        headerObjects[headerID].listOfTODOs[todoID]!!.text = editText(text, "Editing '${text}'")
                     }
-                    else -> {} // Compiler is angry at me when I don't do that, just ignore that
-                }
-            }
-            edit -> {
-                var line = 0
-                loop@ for (headerObject in headerObjects) {
-                    if (line == y){
-                        headerObject!!.headerTitle = editText(headerObject.headerTitle, "Editing '${headerObject.headerTitle}': ")
-                        saveToFile()
-                        break
-                    }
-
-                    line++
-                    if (headerObject!!.expanded) {
-                        for (todo in headerObject.listOfTODOs) {
-                            if (line == y) {
-                                todo!!.text = editText(todo.text, "Editing '${todo.text}': ")
-                                saveToFile()
-                                break@loop
-                            }
-                            line++
-                        }
-                    }
+                    else -> {}
                 }
             }
 
-            new -> {
-                var line = 0
-                loop@ for (headerObject in headerObjects) {
-                    if (line == y) {
+            new -> { // Create new object
+                when (getLineTypeAt(y)) {
+                    ObjectType.Header, ObjectType.Todo -> { // If HeaderObject or TodoObject is selected create new TodoObject (might change in future when adding children todos)
                         val newTodo = TODOObject()
                         newTodo.text = editText("", "Creating new todo checkbox: ")
                         newTodo.state = State.TODO
-                        headerObject?.addTODO(newTodo)
+                        headerObjects[getHeaderIdAt(y)].addTODO(newTodo)
                         saveToFile()
-                        return
                     }
-                    line++
-                    if (headerObject!!.expanded) {
-                        for (todo in headerObject.listOfTODOs) {
-                            if (line == y) {
-                                val newTodo = TODOObject()
-                                newTodo.text = editText("", "Creating new todo checkbox: ")
-                                newTodo.state = State.TODO
-                                headerObject.addTODO(newTodo)
-                                saveToFile()
-                                return
-                            }
-                            line++
-                        }
+                    else -> { // If empty line is selected create new HeaderObject
+                        val newHeaderObject = HeaderObject()
+                        newHeaderObject.headerTitle = editText("", "Creating new todo checkbox: ")
+                        createHeaderObject(newHeaderObject)
                     }
                 }
-                val newHeaderObject = HeaderObject()
-                newHeaderObject.headerTitle = editText("", "Creating new todo checkbox: ")
-                createHeaderObject(newHeaderObject)
             }
-            remove -> {
-                var line = 0
-                loop@ for ((x, headerObject) in headerObjects.withIndex()) {
-                    if(line == y && verificationAsk("Are you sure you want to delete `${headerObject?.headerTitle}`? y/n")) {
-                        val newList: Array<HeaderObject?> = Array(headerObjects.size-1) { HeaderObject() }
-                        var a = 0
-                        for (l in headerObjects.indices) {
-                            val newHeaderObject = headerObjects[l]
-                            if (l == x) {
-                                saveToFile()
-                                continue
-                            }
-                            newList[a] = newHeaderObject
-                            a++
-                        }
-                        headerObjects = newList
-                    }
 
-                    line++
-                    if (headerObject!!.expanded) {
-                        for (i in 0 until headerObject.listOfTODOs.size) {
-                            if (line == y && verificationAsk("Are you sure you want to delete `${headerObject.listOfTODOs[i]?.text}`? y/n")) {
-                                val newList: Array<TODOObject?> = Array(headerObject.listOfTODOs.size-1) { TODOObject() }
-                                var k =0
-                                for (j in 0 until headerObject.listOfTODOs.size) {
-                                    val newTodo = headerObject.listOfTODOs[j]
-                                    if(j == i) {
-                                        saveToFile()
-                                        continue
-                                    }
-                                    newList[k] = newTodo
-                                    k++
+            remove -> {
+                when (getLineTypeAt(y)) {
+                    ObjectType.Header -> {
+                        val headerID = getHeaderIdAt(y)
+                        if(verificationAsk("Are you sure you want to delete '${headerObjects[headerID].headerTitle}'? y/n")) {
+                            val newList: Array<HeaderObject?> = Array(headerObjects.size-1) { HeaderObject() }
+                            var a = 0
+                            for (l in headerObjects.indices) {
+                                val newHeaderObject = headerObjects[l]
+                                if (l == headerID) {
+                                    saveToFile()
+                                    continue
                                 }
-                                headerObject.listOfTODOs = newList
-                                break@loop
+                                newList[a] = newHeaderObject
+                                a++
                             }
-                            line++
+                            headerObjects = newList.filterNotNull().toTypedArray()
                         }
                     }
+                    ObjectType.Todo -> {
+                        val todoID = getTodoIdAt(y)[0]
+                        val headerID = getTodoIdAt(y)[1]
+                        if (verificationAsk("Are you sure you want to delete `${headerObjects[headerID].listOfTODOs[todoID]?.text}`? y/n")) {
+                            val newList: Array<TODOObject?> = Array(headerObjects[headerID].listOfTODOs.size-1) { TODOObject() }
+                            var k =0
+                            for (j in 0 until headerObjects[headerID].listOfTODOs.size) {
+                                val newTodo = headerObjects[headerID].listOfTODOs[j]
+                                if(j == todoID) {
+                                    saveToFile()
+                                    continue
+                                }
+                                newList[k] = newTodo
+                                k++
+                            }
+                            headerObjects[headerID].listOfTODOs = newList
+                        }
+                    }
+                    else -> {}
                 }
             }
         }

@@ -1,37 +1,39 @@
-
 import objects.ObjectType
 
-fun getLineType(y: Int): ObjectType? {
+// Gets if line is either HeaderObject, TodoObject or empty
+fun getLineTypeAt(linePosition: Int): ObjectType? {
     var line = 0
     for (headerObject in headerObjects) {
-        if (line == y) return ObjectType.Header
-        if (headerObject!!.expanded) {
+        if (line == linePosition) return ObjectType.Header
+        if (headerObject.expanded) {
             line += headerObject.listOfTODOs.size
-            if (line > y) return ObjectType.Todo
+            if (line >= linePosition) return ObjectType.Todo
         }
         line++
     }
     return null
 }
 
-fun getHeaderID(y: Int): Int? {
+// Gets HeaderObject's ID at line
+fun getHeaderIdAt(linePosition: Int): Int {
     var line = 0
     for ((i, headerObject) in headerObjects.withIndex()) {
-        if (line == y) return i
-        if (headerObject!!.expanded) line += headerObject.listOfTODOs.size
+        if (line == linePosition) return i
+        if (headerObject.expanded) line += headerObject.listOfTODOs.size
         line++
     }
-    return null
+    return 0
 }
 
-fun getTodoID(y: Int): IntArray? {
-    var line = 0
+// Gets TodoObject's ID at
+fun getTodoIdAt(linePosition: Int): IntArray {
+    var line = 1
     for ((i, headerObject) in headerObjects.withIndex()) {
-        if (headerObject!!.expanded) {
-            if (line + headerObject.listOfTODOs.size > y) return intArrayOf(y-line-1, i)
+        if (headerObject.expanded) {
+            if (line + headerObject.listOfTODOs.size >= linePosition) return intArrayOf(y-line, i)
             line += headerObject.listOfTODOs.size
         }
         line++
     }
-    return null
+    return intArrayOf(0, 0)
 }
