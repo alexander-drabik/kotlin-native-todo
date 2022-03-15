@@ -11,6 +11,7 @@ var new: Int = Keyboard.INSERT.keycode
 var edit: Int = Keyboard.E.keycode
 var remove: Int = KEY_BACKSPACE
 var exit: Int = Keyboard.Q.keycode
+var headerExtendInfo: String = "[...]"
 var pointer = false
 
 fun toKey(value: String?): Int {

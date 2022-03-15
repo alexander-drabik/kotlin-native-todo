@@ -115,13 +115,14 @@ fun loadConfig() {
                 line.append(input.trim().toString())
                 input = line
 
-                val commandRegex = """(.*)\s(.*)""".toRegex()
+                val commandRegex = """([^\s]+)\s(.+)""".toRegex()
                 val value = commandRegex.find(input.toString())?.groups?.get(2)?.value
 
                 when (commandRegex.find(input.toString())?.groups?.get(1)?.value) {
                     "spaces" -> spaces = value?.toInt()!!
                     "indent_spaces" -> indentSpaces = value?.toInt()!!
                     "pointer" -> pointer = value.toBoolean()
+                    "headerExtendInfo" -> headerExtendInfo = value.toString()
 
                     "up"   -> up    = toKey(value)
                     "down" -> down  = toKey(value)
