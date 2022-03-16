@@ -7,7 +7,7 @@ import platform.posix.*
 
 fun saveToFile() {
     // Open save file in write mode
-    val file = fopen("${getenv("HOME")?.toKString()}/.config/todo/save", "w")
+    val file = fopen("${getenv("HOME")?.toKString()}/.todo/save", "w")
 
     // Construct output string
     val output = StringBuilder()
@@ -33,7 +33,7 @@ fun saveToFile() {
 
 fun loadFromFile() {
     // Open save file in read mode
-    val file = fopen("${getenv("HOME")?.toKString()}/.config/todo/save", "r")
+    val file = fopen("${getenv("HOME")?.toKString()}/.todo/save", "r")
 
     var input = StringBuilder()
 
@@ -122,7 +122,7 @@ fun loadConfig() {
                     "spaces" -> spaces = value?.toInt()!!
                     "indent_spaces" -> indentSpaces = value?.toInt()!!
                     "pointer" -> pointer = value.toBoolean()
-                    "headerExtendInfo" -> headerExtendInfo = value.toString()
+                    "header_extend_info" -> headerExtendInfo = value.toString()
 
                     "up"   -> up    = toKey(value)
                     "down" -> down  = toKey(value)

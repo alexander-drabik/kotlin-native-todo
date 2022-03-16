@@ -14,7 +14,7 @@ Default key binding:
 * <kbd>E</kbd> - Enter edit mode of line you are pointing on
 
 ## Customization
-If default configuration doesn't suit you, you can always change it. All you need to do is to make 'config' file in "~/.config/todo/config".
+If default configuration doesn't suit you, you can always change it. All you need to do is make 'config' file in "~/.config/todo/config".
 Every line in your config file should look like that: "variable_name value". At first, you write variable's name, then you make space, and you write value of variable.
 Here's every command listed:
 
@@ -40,9 +40,20 @@ As value of any key bind you can write any character from a-z or A-Z, additional
 * indent_spaces - indentation of checkbox
 * spaces - number of spaces between state of checkbox and name of checkpoint
 * pointer - visibility of pointer info at the bottom
+* header_extend_info - changes header extend info
+#### Header Extend Info Customization
+Header Extend Info uses simple HTML-like code. You can use variables by putting them inside like that "</tag/>".
+Example Header Extend Info customization:
+```
+header_extend_info (</done/> / </todo/>)
+```
+After the customization headers should look this:
+```
+Example Header (8 / 9)
+```
 
 ## Save file
-Application automatically saves everything to "~/.config/todo/save". It was designed to be easily readable for humans, so you can edit it manually if you want. Example save file:
+Application automatically saves everything to "~/.todo/save". It was designed to be easily readable for humans, so you can edit it manually if you want. Example save file:
 ```
 #Example Header
 [ ] Example 'TODO' checkbox

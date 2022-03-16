@@ -54,8 +54,15 @@ class HeaderObject {
                             commandValue = commandValue.dropLast(1)
                             commandValue = commandValue.drop(1)
                             when (commandValue) {
+                                "total" -> newHeaderInfo += listOfTODOs.size.toString()
                                 "todo" -> {
-                                    newHeaderInfo += listOfTODOs.size.toString()
+                                    var n = 0
+                                    for (todo in listOfTODOs) {
+                                        if (todo?.state == State.TODO) {
+                                            n++
+                                        }
+                                    }
+                                    newHeaderInfo += n.toString()
                                 }
                                 "done" -> {
                                     var n = 0
@@ -75,9 +82,8 @@ class HeaderObject {
                                     }
                                     newHeaderInfo += n.toString()
                                 }
-                                "space" -> {
-                                    newHeaderInfo += " "
-                                }
+                                "space" -> newHeaderInfo += " "
+                                else -> newHeaderInfo += "!UNKNOWN COMMAND!"
                             }
                             commandValue = ""
                             continue
