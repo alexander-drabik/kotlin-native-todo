@@ -42,12 +42,12 @@ As value of any key bind you can write any character from a-z or A-Z, additional
 * pointer - visibility of pointer info at the bottom
 * header_extend_info - changes header extend info
 #### Header Extend Info Customization
-Header Extend Info uses simple HTML-like code. You can use variables by putting them inside like that "</tag/>".
+You can use variables by putting them inside like that "</tag/>".
 Example Header Extend Info customization:
 ```
 header_extend_info (</done/> / </todo/>)
 ```
-After the customization headers should look this:
+After the customization headers should look like this:
 ```
 Example Header (8 / 9)
 ```
